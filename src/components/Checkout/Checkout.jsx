@@ -65,6 +65,8 @@ export const Checkout = () => {
                     telefono: phone,
                     mail: email1,
                 },
+                date: new Date(),
+                estado: 'Generada',
                 items: cart,
                 total: totalCarrito()
             };

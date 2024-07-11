@@ -6,13 +6,25 @@ import { Error404 } from '../Error404/Error404';
 
 export const ItemDetailContainer = () => {
     const [item, setItem] = useState(null);
+    const [loading, setLoading] = useState(true);
     const { id } = useParams();
 
     useEffect(() => {
+        setLoading(true);
         getItem(id)
-            .then(res => setItem(res))
-            .catch(err => console.error(err));
+            .then(res => {
+                setItem(res);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false);
+            });
     }, [id]);
+
+    if (loading) {
+        return <div>Cargando...</div>;
+    }
 
     return (
         <main>
@@ -22,5 +34,5 @@ export const ItemDetailContainer = () => {
                 <Error404 />
             )}
         </main>
-    )
+    );
 }
