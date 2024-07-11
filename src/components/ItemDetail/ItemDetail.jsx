@@ -25,7 +25,7 @@ export const ItemDetail = ({ id, name, description, img, price, stock }) => {
                         <p className="lead">{description}</p>
                         <div className="d-flex">
                             <ItemQuantitySelector stock={stock} quantity={quantity} onQuantityChange={handleQuantityChange} />
-                            <AddItemButton id={id} quantity={quantity} stock={stock} />
+                            <AddItemButton id={id} quantity={quantity} name={name} price={price} stock={stock} />
                         </div>
                     </div>
                 </div>

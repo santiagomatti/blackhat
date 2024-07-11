@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { CartContext } from "../../context/CartContext";
 
-export const AddItemButton = ({ id, quantity, stock }) => {
+export const AddItemButton = ({ id, quantity, name, price, stock }) => {
     const { agregarAlCarrito } = useContext(CartContext);
 
     const handleClick = () => {
@@ -10,8 +10,7 @@ export const AddItemButton = ({ id, quantity, stock }) => {
         } else if (quantity > stock) {
             alert("La cantidad no puede ser mayor al stock");
         } else {
-            // Agregar el producto al carrito
-            const producto = { id, quantity };
+            const producto = { id, quantity, name, price};
             agregarAlCarrito(producto);
             alert("Producto agregado al carrito");
         }
