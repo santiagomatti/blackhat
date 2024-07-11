@@ -9,8 +9,14 @@ export const CartComponentContext = ({ children }) => {
         setCart([...cart, producto]);
     };
 
+    const eliminarDelCarrito = (index) => {
+        const newCart = [...cart];
+        newCart.splice(index, 1);
+        setCart(newCart);
+    };
+
     return (
-        <CartContext.Provider value={{ cart, agregarAlCarrito }}>
+        <CartContext.Provider value={{ cart, agregarAlCarrito, eliminarDelCarrito }}>
             {children}
         </CartContext.Provider>
     );

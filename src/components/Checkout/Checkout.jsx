@@ -4,7 +4,7 @@ import { CartContext } from "../../context/CartContext";
 import '../../styles/checkout.css';
 
 export const Checkout = () => {
-    const { cart } = useContext(CartContext);
+    const { cart, eliminarDelCarrito } = useContext(CartContext);
 
     const totalCarrito = () => {
         let total = 0;
@@ -14,12 +14,20 @@ export const Checkout = () => {
         return total;
     };
 
+    const cantidad = () => {
+        let cantidad = 0;
+        cart.forEach((producto) => {
+            cantidad += producto.quantity;
+        });
+        return cantidad;
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
-    
+
         const email1 = document.getElementById('email1').value;
         const email2 = document.getElementById('email2').value;
-    
+
         if (email1 !== email2) {
             document.getElementById('email2').classList.add('is-invalid');
             document.querySelector('.invalid-feedback').style.display = 'block';
@@ -27,11 +35,11 @@ export const Checkout = () => {
             // Continuar con el envío del formulario si los correos coinciden
             document.getElementById('email2').classList.remove('is-invalid');
             document.querySelector('.invalid-feedback').style.display = 'none';
-    
+
             // Aquí podrías enviar el formulario o realizar otras acciones necesarias
         }
     };
-    
+
 
     if (cart.length === 0) {
         return (
@@ -53,7 +61,7 @@ export const Checkout = () => {
                             <div className="col-md-5 col-lg-4 order-md-last">
                                 <h4 className="d-flex justify-content-between align-items-center mb-3">
                                     <span>Carrito</span>
-                                    <span className="badge bg-dark rounded-pill">{cart.length}</span>
+                                    <span className="badge bg-dark rounded-pill">{cantidad()}</span>
                                 </h4>
                                 <ul className="list-group mb-3">
                                     {cart.map((producto, index) => (
@@ -63,6 +71,7 @@ export const Checkout = () => {
                                                 <small className="text-body-secondary">Cantidad: {producto.quantity}</small>
                                             </div>
                                             <span className="text-body-secondary">${producto.price * producto.quantity}</span>
+                                            <button className="btn btn-outline-danger btn-sm ms-2" onClick={() => eliminarDelCarrito(index)}>Eliminar</button>
                                         </li>
                                     ))}
 
