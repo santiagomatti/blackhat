@@ -5,3 +5,7 @@
 .navbar-brand {
     font-weight: bolder;
 }
+
+a {
+    text-decoration: none;
+}

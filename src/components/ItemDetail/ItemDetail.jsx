@@ -1,6 +1,14 @@
-import { ItemCount } from '../ItemCount/ItemCount'
+import { useState } from "react";
+import { AddItemButton } from "../AddItemButton/AddItemButton";
+import { ItemQuantitySelector } from "../ItemQuantitySelector/ItemQuantitySelector";
 
 export const ItemDetail = ({ id, name, description, img, price, stock }) => {
+    const [quantity, setQuantity] = useState(1);
+
+    const handleQuantityChange = (e) => {
+        setQuantity(Number(e.target.value));
+    };
+
     return (
         <section className="py-5">
             <div className="container px-4 px-lg-5 my-5">
@@ -16,17 +24,12 @@ export const ItemDetail = ({ id, name, description, img, price, stock }) => {
                         </div>
                         <p className="lead">{description}</p>
                         <div className="d-flex">
-                            <input className="form-control text-center me-3" id="inputQuantity" type="number" defaultValue="1" min={1} max={stock} style={{ maxWidth: '3rem' }} />
-                            {/* Esto se va a cambiar por el componente ItemCount */}
-                            <ItemCount />
-                            <button className="btn btn-outline-dark flex-shrink-0" type="button">
-                                <i className="bi-cart-fill me-1"></i>
-                                Agregar al carrito
-                            </button>
+                            <ItemQuantitySelector stock={stock} quantity={quantity} onQuantityChange={handleQuantityChange} />
+                            <AddItemButton id={id} quantity={quantity} stock={stock} />
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    )
-}
+    );
+};
