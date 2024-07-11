@@ -7,7 +7,7 @@ import { db } from "../../firebase/client";
 import '../../styles/checkout.css';
 
 export const Checkout = () => {
-    const { cart, eliminarDelCarrito } = useContext(CartContext);
+    const { cart, eliminarDelCarrito, vaciarCarrito } = useContext(CartContext);
 
     const totalCarrito = () => {
         let total = 0;
@@ -72,7 +72,11 @@ export const Checkout = () => {
             const orderCollection = collection(db, 'orders');
             const docRef = await addDoc(orderCollection, data);
 
-            alert(docRef.id);
+            alert('Numro de orden: ' + docRef.id);
+            
+            vaciarCarrito();
+
+            window.location.href = '/';
         }
     };
 

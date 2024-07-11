@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react'
-import { ItemDetail } from '../ItemDetail/ItemDetail'
-import { getItem } from '../../data/asyncmock'
-import { useParams } from 'react-router-dom'
-import { Error404 } from '../Error404/Error404'
+import { useEffect, useState } from 'react';
+import { ItemDetail } from '../ItemDetail/ItemDetail';
+import { getItem } from '../../data/asyncmock';
+import { useParams } from 'react-router-dom';
+import { Error404 } from '../Error404/Error404';
 
 export const ItemDetailContainer = () => {
-    const [item, setItem] = useState(null)
-    const { id } = useParams()
+    const [item, setItem] = useState(null);
+    const { id } = useParams();
 
     useEffect(() => {
         getItem(id)
             .then(res => setItem(res))
             .catch(err => console.error(err));
-    }, [id])
+    }, [id]);
 
     return (
         <main>

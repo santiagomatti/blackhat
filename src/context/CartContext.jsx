@@ -16,8 +16,12 @@ export const CartComponentContext = ({ children }) => {
         alert('Producto eliminado del carrito');
     };
 
+    const vaciarCarrito = () => {
+        setCart([]);
+    };
+
     return (
-        <CartContext.Provider value={{ cart, agregarAlCarrito, eliminarDelCarrito }}>
+        <CartContext.Provider value={{ cart, agregarAlCarrito, eliminarDelCarrito, vaciarCarrito }}>
             {children}
         </CartContext.Provider>
     );
