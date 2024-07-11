@@ -4,6 +4,8 @@ import { CartContext } from "../../context/CartContext";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase/client";
 
+import Swal from 'sweetalert2';
+
 import '../../styles/checkout.css';
 
 export const Checkout = () => {
@@ -39,25 +41,25 @@ export const Checkout = () => {
         const email2 = document.getElementById('email2').value.trim();
 
         if (!firstName) {
-            alert('Por favor ingresa tu nombre.');
+            Swal.fire("Error", "Por favor ingresa tu nombre.", "error")
         } else if (!lastName) {
-            alert('Por favor ingresa tu apellido.');
+            Swal.fire("Error", "Por favor ingresa tu apellido.", "error")
         } else if (!validarNombreApellido(firstName)) {
-            alert('El nombre solo debe contener letras.');
+            Swal.fire("Error", "El nombre solo debe contener letras.", "error")
         } else if (!validarNombreApellido(lastName)) {
-            alert('El apellido solo debe contener letras.');
+            Swal.fire("Error", "El apellido solo debe contener letras.", "error")
         } else if (!phone) {
-            alert('Por favor ingresa tu teléfono.');
+            Swal.fire("Error", "Por favor ingresa tu teléfono.", "error")
         } else if (!validarTelefono(phone)) {
-            alert('El teléfono solo debe contener números.');
+            Swal.fire("Error", "El teléfono solo debe contener números.", "error")
         } else if (!email1) {
-            alert('Por favor ingresa tu correo electrónico.');
+            Swal.fire("Error", "Por favor ingresa tu correo electrónico.", "error")
         } else if (!validarEmail(email1)) {
-            alert('El formato del correo electrónico no es válido.');
+            Swal.fire("Error", "El formato del correo electrónico no es válido.", "error")
         } else if (!email2) {
-            alert('Por favor repite tu correo electrónico.');
+            Swal.fire("Error", "Por favor repite tu correo electrónico.", "error")
         } else if (email1 !== email2) {
-            alert('Los correos electrónicos no coinciden.');
+            Swal.fire("Error", "Los correos electrónicos no coinciden.", "error")
         } else {
             const data = {
                 buyer: {
@@ -74,11 +76,15 @@ export const Checkout = () => {
             const orderCollection = collection(db, 'orders');
             const docRef = await addDoc(orderCollection, data);
 
-            alert('Numro de orden: ' + docRef.id);
-            
-            vaciarCarrito();
-
-            window.location.href = '/';
+            Swal.fire({
+                title: "Éxito",
+                text: "Compra realizada con éxito, el número de orden es el " + docRef.id,
+                footer: "Nos pondremos en contacto via mail para gestionar el pago y la entrega de su pedido.",
+                icon: "success"
+            }).then(() => {
+                window.location.href = '/';
+                vaciarCarrito();
+            });
         }
     };
 

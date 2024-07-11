@@ -13,7 +13,6 @@ export const CartComponentContext = ({ children }) => {
         const newCart = [...cart];
         newCart.splice(index, 1);
         setCart(newCart);
-        alert('Producto eliminado del carrito');
     };
 
     const vaciarCarrito = () => {
