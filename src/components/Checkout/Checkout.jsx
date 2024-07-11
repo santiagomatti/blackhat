@@ -1,6 +1,9 @@
 import { useContext } from "react";
 import { CartContext } from "../../context/CartContext";
 
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../firebase/client";
+
 import '../../styles/checkout.css';
 
 export const Checkout = () => {
@@ -22,24 +25,56 @@ export const Checkout = () => {
         return cantidad;
     };
 
-    const handleSubmit = (event) => {
+    const validarNombreApellido = (nombre) => /^[a-zA-Z\s]+$/.test(nombre);
+    const validarTelefono = (telefono) => /^[0-9]+$/.test(telefono);
+    const validarEmail = (correo) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+
+    const finalizarCompra = async (event) => {
         event.preventDefault();
 
-        const email1 = document.getElementById('email1').value;
-        const email2 = document.getElementById('email2').value;
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const email1 = document.getElementById('email1').value.trim();
+        const email2 = document.getElementById('email2').value.trim();
 
-        if (email1 !== email2) {
-            document.getElementById('email2').classList.add('is-invalid');
-            document.querySelector('.invalid-feedback').style.display = 'block';
+        if (!firstName) {
+            alert('Por favor ingresa tu nombre.');
+        } else if (!lastName) {
+            alert('Por favor ingresa tu apellido.');
+        } else if (!validarNombreApellido(firstName)) {
+            alert('El nombre solo debe contener letras.');
+        } else if (!validarNombreApellido(lastName)) {
+            alert('El apellido solo debe contener letras.');
+        } else if (!phone) {
+            alert('Por favor ingresa tu teléfono.');
+        } else if (!validarTelefono(phone)) {
+            alert('El teléfono solo debe contener números.');
+        } else if (!email1) {
+            alert('Por favor ingresa tu correo electrónico.');
+        } else if (!validarEmail(email1)) {
+            alert('El formato del correo electrónico no es válido.');
+        } else if (!email2) {
+            alert('Por favor repite tu correo electrónico.');
+        } else if (email1 !== email2) {
+            alert('Los correos electrónicos no coinciden.');
         } else {
-            // Continuar con el envío del formulario si los correos coinciden
-            document.getElementById('email2').classList.remove('is-invalid');
-            document.querySelector('.invalid-feedback').style.display = 'none';
+            const data = {
+                buyer: {
+                    nombre: `${firstName} ${lastName}`,
+                    telefono: phone,
+                    mail: email1,
+                },
+                items: cart,
+                total: totalCarrito()
+            };
 
-            // Aquí podrías enviar el formulario o realizar otras acciones necesarias
+            const orderCollection = collection(db, 'orders');
+            const docRef = await addDoc(orderCollection, data);
+
+            alert(docRef.id);
         }
     };
-
 
     if (cart.length === 0) {
         return (
@@ -51,7 +86,7 @@ export const Checkout = () => {
                     </div>
                 </div>
             </header>
-        )
+        );
     } else {
         return (
             <>
@@ -83,8 +118,9 @@ export const Checkout = () => {
                             </div>
                             <div className="col-md-7 col-lg-8">
                                 <h4 className="mb-3">Datos</h4>
-                                <form className="needs-validation" noValidate onSubmit={handleSubmit}>
+                                <form className="needs-validation" noValidate onSubmit={finalizarCompra}>
                                     <div className="row g-3">
+
                                         <div className="col-sm-6">
                                             <label htmlFor="firstName" className="form-label">
                                                 Nombre
@@ -105,12 +141,12 @@ export const Checkout = () => {
                                             <label htmlFor="phone" className="form-label">
                                                 Teléfono
                                             </label>
-                                            <input type="tel" className="form-control" id="phone" placeholder="123456789" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" required />
+                                            <input type="tel" className="form-control" id="phone" placeholder="123456789" required />
                                             <div className="invalid-feedback">Por favor ingresa un teléfono válido.</div>
                                         </div>
 
                                         <div className="col-12">
-                                            <label htmlFor="email" className="form-label">
+                                            <label htmlFor="email1" className="form-label">
                                                 Email
                                             </label>
                                             <input type="email" className="form-control" id="email1" placeholder="you@example.com" required />
@@ -118,7 +154,7 @@ export const Checkout = () => {
                                         </div>
 
                                         <div className="col-12">
-                                            <label htmlFor="email" className="form-label">
+                                            <label htmlFor="email2" className="form-label">
                                                 Email <span className="text-body-secondary">(Repetir)</span>
                                             </label>
                                             <input type="email" className="form-control" id="email2" placeholder="you@example.com" required />
@@ -126,12 +162,10 @@ export const Checkout = () => {
                                         </div>
 
                                     </div>
-
                                     <button className="mt-5 w-100 btn btn-outline-dark btn-lg" type="submit">
                                         Realizar Compra
                                     </button>
-                                </form>;
-
+                                </form>
                             </div>
                         </div>
                     </main>
@@ -140,5 +174,3 @@ export const Checkout = () => {
         );
     }
 };
-
-export default Checkout;
